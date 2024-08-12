@@ -230,7 +230,6 @@
                     </div>
                 </div>
             </div>
-{{--            saxas--}}
         </section>
     </main>
 @endsection
