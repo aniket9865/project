@@ -2,20 +2,33 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\CategoryController;
-use App\Http\Controllers\Product\ProductController;
 
-// Default route
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+
 //Route for Front
 Route::get('/',[\App\Http\Controllers\FrontController::class,'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[\App\Http\Controllers\ShopController::class,'index'])->name('front.shop');
 Route::get('/product/{productSlug?}',[\App\Http\Controllers\ShopController::class,'product'])->name('front.product');
-Route::get('/cart',[\App\Http\Controllers\CartController::class,'cart'])->name('front.cart');
-Route::post('/add=to-cart',[\App\Http\Controllers\CartController::class,'addToCart'])->name('front.addToCart');
+//Route::get('/cart',[\App\Http\Controllers\CartController::class,'cart'])->name('front.cart');
+//Route::post('/add=to-cart',[\App\Http\Controllers\CartController::class,'addToCart'])->name('front.addToCart');
 
+use App\Http\Controllers\CartController;
 
+// Route to display the cart
+Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
+
+// Route to add a product to the cart
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+
+// Route to update the quantity of a product in the cart
+Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+
+// Route to remove a product from the cart
+Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+use App\Http\Controllers\CheckoutController;
+
+// Route for checkout page
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 // Routes for user account
 Route::prefix('account')->group(function () {
@@ -31,8 +44,6 @@ Route::prefix('account')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('account.logout');
         Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('account.dashboard');
-
-
 
     });
 });
@@ -120,10 +131,4 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-//// Product Routes
-//Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-//Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-//Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-//Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-//Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-//Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+

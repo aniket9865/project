@@ -52,6 +52,29 @@
     });
 
 
+    function addToCart(id) {
+        $.ajax({
+            {{--url: '{{ route("front.addToCart") }}',--}}
+            url: '{{ route("cart.add") }}',
+            type: 'post',
+            data: { id: id },
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === true) {
+                    {{--window.location.href = "{{ route('front.cart') }}";--}}
+                        window.location.href = "{{ route('cart.index') }}";
+                } else {
+                    console.log('test',response.message)
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                alert('An error occurred while adding the item to the cart.');
+            }
+        });
+    }
+
 </script>
 
 @yield('customjs')

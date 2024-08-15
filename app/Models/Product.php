@@ -24,6 +24,7 @@ class Product extends Model
         'sub_category_id',
         'brand_id',
         'is_featured',
+        'image',
     ];
 
     // Optionally, you can define which attributes are hidden

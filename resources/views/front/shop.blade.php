@@ -352,7 +352,7 @@
                                     <div class="col-md-4">
                                         <div class="card product-card">
                                             <div class="product-image position-relative">
-                                                <a href="#" class="product-img">
+                                                <a href="{{route("front.product", $product->slug)}}"  class="product-img">
                                                     @if(!empty($product->image))
                                                         <img class="card-img-top" src="{{ asset('uploads/temp/' . $product->image) }}" alt="{{ $product->title }}">
                                                     @else
@@ -361,7 +361,7 @@
                                                 </a>
                                                 <a class="wishlist" href="#" data-product-id="{{ $product->id }}"><i class="far fa-heart"></i></a>
                                                 <div class="product-action">
-                                                    <a class="btn btn-dark" href="#" data-product-id="{{ $product->id }}">
+                                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})" data-product-id="{{ $product->id }}">
                                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                                     </a>
                                                 </div>
