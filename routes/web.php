@@ -48,6 +48,8 @@ Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.u
 // Route to remove a product from the cart
 Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
+Route::post('/get-order-summery', [CartController::class, 'getOrderSummery'])->name('front.getOrderSummery');
+
 
 // Routes for user account
 Route::prefix('account')->group(function () {

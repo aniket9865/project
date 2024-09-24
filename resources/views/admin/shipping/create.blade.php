@@ -29,7 +29,7 @@
                                     @foreach ($countries as $country)
                                         <option value="{{ $country->id }}">{{ $country->name }}</option>
                                     @endforeach
-                                    <option value="rest_of_world">Rest of the world</option>
+{{--                                    <option value="rest_of_world">Rest of the world</option>--}}
                                 </select>
                                 <span class="text-danger error" id="countryError"></span>
                             </div>

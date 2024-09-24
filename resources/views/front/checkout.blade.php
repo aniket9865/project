@@ -134,14 +134,16 @@
                                 <div class="h6"><strong>Subtotal</strong></div>
                                 <div class="h6"><strong>{{ Cart::subtotal() }}</strong></div>
                             </div>
-                            <div class="d-flex justify-content-between mt-2">
-                                <div class="h6"><strong>Shipping</strong></div>
-                                <div class="h6"><strong>$0</strong></div>
-                            </div>
-                            <div class="d-flex justify-content-between mt-2 summery-end">
-                                <div class="h5"><strong>Total</strong></div>
-                                <div class="h5"><strong>{{ Cart::subtotal() }}</strong></div>
-                            </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <div class="h6"><strong>Shipping</strong></div>
+                                    <div class="h6"><strong id="shippingAmount">Rs{{ number_format($totalShippingCharge, 2) }}</strong></div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-2 summery-end">
+                                    <div class="h5"><strong>Total</strong></div>
+                                    <div class="h5"><strong id="grandTotal">Rs{{ number_format($grandTotal, 2) }}</strong></div>
+                                </div>
+
                         </div>
                     </div>
 
@@ -190,99 +192,6 @@
 
 @endsection
 
-{{--@section('customjs')--}}
-{{--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
-{{--    <script>--}}
-{{--        $(document).ready(function() {--}}
-{{--            // Handle form submission with AJAX--}}
-{{--            $('#orderForm').on('submit', function(e) {--}}
-{{--                e.preventDefault();--}}
-
-{{--                // Clear previous error messages--}}
-{{--                $('.text-danger').remove();--}}
-
-{{--                // Basic validation--}}
-{{--                let isValid = true;--}}
-
-{{--                // Required fields--}}
-{{--                const requiredFields = ['first_name', 'last_name', 'email', 'address', 'country', 'city', 'state', 'zip', 'mobile'];--}}
-{{--                requiredFields.forEach(function(field) {--}}
-{{--                    const $field = $('#' + field);--}}
-{{--                    if ($field.val().trim() === '') {--}}
-{{--                        isValid = false;--}}
-{{--                        $field.after('<div class="text-danger">This field is required.</div>');--}}
-{{--                    }--}}
-{{--                });--}}
-
-{{--                // Specific validation for the country field--}}
-{{--                if ($('#country').val() === '') {--}}
-{{--                    isValid = false;--}}
-{{--                    $('#country').after('<div class="text-danger">Please select a country.</div>');--}}
-{{--                }--}}
-
-{{--                // Validate mobile number (example: check if it's a valid format)--}}
-{{--                const mobile = $('#mobile').val().trim();--}}
-{{--                if (mobile !== '' && !/^\d{10}$/.test(mobile)) {--}}
-{{--                    isValid = false;--}}
-{{--                    $('#mobile').after('<div class="text-danger">Invalid mobile number. Please enter a 10-digit number.</div>');--}}
-{{--                }--}}
-
-{{--                // Stripe payment method validation--}}
-{{--                if ($('input[name="payment_method"]:checked').val() === 'stripe') {--}}
-{{--                    const stripeFields = ['card_number', 'expiry_date', 'cvv_code'];--}}
-{{--                    stripeFields.forEach(function(field) {--}}
-{{--                        const $field = $('#' + field);--}}
-{{--                        if ($field.val().trim() === '') {--}}
-{{--                            isValid = false;--}}
-{{--                            $field.after('<div class="text-danger">This field is required.</div>');--}}
-{{--                        }--}}
-{{--                    });--}}
-{{--                }--}}
-
-{{--                if (!isValid) {--}}
-{{--                    return;--}}
-{{--                }--}}
-
-{{--                // Proceed with AJAX submission--}}
-{{--                $.ajax({--}}
-{{--                    url: '{{ route('front.processCheckout') }}',--}}
-{{--                    method: 'POST',--}}
-{{--                    data: $(this).serialize(),--}}
-{{--                    headers: {--}}
-{{--                        'X-CSRF-TOKEN': '{{ csrf_token() }}',--}}
-{{--                    },--}}
-{{--                    success: function(response) {--}}
-{{--                        if (response.success) {--}}
-{{--                            alert('Order placed successfully!');--}}
-{{--                            window.location.href = '{{ route('front.thankyou') }}';--}}
-{{--                        } else {--}}
-{{--                            alert('Order placed successfully!: ' + response.message);--}}
-{{--                            window.location.href = '{{ route('front.thankyou') }}';--}}
-{{--                        }--}}
-{{--                    },--}}
-{{--                    error: function(xhr) {--}}
-{{--                        console.error('Error:', xhr);--}}
-{{--                        alert('An error occurred. Please try again.');--}}
-{{--                    }--}}
-{{--                });--}}
-{{--            });--}}
-
-{{--            // Payment method toggle--}}
-{{--            $('#payment_method_one').on('click', function() {--}}
-{{--                if (this.checked) {--}}
-{{--                    $('#card-payment-form').addClass('d-none');--}}
-{{--                }--}}
-{{--            });--}}
-
-{{--            $('#payment_method_two').on('click', function() {--}}
-{{--                if (this.checked) {--}}
-{{--                    $('#card-payment-form').removeClass('d-none');--}}
-{{--                }--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
-
-{{--@endsection--}}
 
 
 <!-- Include jQuery in your Blade template -->
@@ -404,5 +313,31 @@
                 });
             });
         });
+
+        $("#country").change(function() {
+            $.ajax({
+                url: '{{ route("front.getOrderSummery") }}', // Ensure the correct route
+                type: 'post',
+                data: { country_id: $(this).val() }, // Corrected the data structure
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == true) {
+                        $("#shippingAmount").html('$' + response.shippingCharge); // Display shipping charge
+                        $("#grandTotal").html('$' + response.grandTotal); // Correctly concatenate dollar sign
+                    }
+                    // else {
+                    //     // Optional: Handle error case when status is false
+                    //     alert(response.message); // Show error message if applicable
+                    // }
+                },
+                // error: function(xhr, status, error) {
+                //     // Optional: Handle AJAX errors
+                //     console.error(xhr.responseText);
+                //     alert('An error occurred while processing your request.'); // Alert user of error
+                // }
+            });
+        });
+
+
     </script>
 @endsection
