@@ -3,80 +3,84 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\Order;
 
 class OrderController extends Controller
 {
     // Display a listing of the orders.
-    public function index()
-    {
-        $orders = Order::all();
-        return view('admin.order.list', compact('orders'));
+    public function index(Request $request) {
+        // Get orders with users' data
+        $orders = Order::latest('orders.created_at')
+            ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+            ->select('orders.*', 'users.name', 'users.email');
+
+        // Check for search keyword
+        if ($request->get('search') != "") {
+            $keyword = $request->search;
+            $orders = $orders->where(function($query) use ($keyword) {
+                $query->where('users.name', 'like', '%' . $keyword . '%')
+                    ->orWhere('users.email', 'like', '%' . $keyword . '%')
+                    ->orWhere('orders.id', 'like', '%' . $keyword . '%')
+                    ->orWhere('orders.mobile', 'like', '%' . $keyword . '%');;
+            });
+        }
+
+        // Paginate results and append query parameters
+        $orders = $orders->paginate(10)->appends($request->query());
+
+        // Return view with orders data
+        return view('admin.order.list', ['orders' => $orders]);
     }
 
-    // Show the form for creating a new order.
-    public function create()
-    {
-        return view('admin.order.detail');
+    public function detail($orderId) {
+        // Fetch the order with country name
+        $order = Order::select('orders.*', 'countries.name as countryName')
+            ->where('orders.id', $orderId)
+            ->leftJoin('countries', 'countries.id', '=', 'orders.country_id')
+            ->first();
+
+        // Fetch the order items
+        $orderItems = OrderItem::where('order_id', $orderId)->get();
+
+        // Return the view with order and order items
+        return view('admin.order.detail', [
+            'order' => $order,
+            'orderItems' => $orderItems
+        ]);
     }
 
-    // Store a newly created order in the database.
-    public function store(Request $request)
+    public function changeOrderStatus(Request $request, $orderId)
     {
-        $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'product_name' => 'required|string|max:255',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
-        ]);
+        // Find the order by its ID
+        $order = Order::find($orderId);
 
-        $order = new Order([
-            'customer_name' => $request->get('customer_name'),
-            'product_name' => $request->get('product_name'),
-            'quantity' => $request->get('quantity'),
-            'price' => $request->get('price'),
-        ]);
+        // Check if the order exists
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order not found'
+            ], 404);
+        }
 
+        // Update the order status and shipped date
+        $order->status = $request->input('status');
+        $order->shipped_date = $request->input('shipped_date');
         $order->save();
 
-        return redirect()->route('order.list')->with('success', 'Order created successfully.');
-    }
+        // Prepare the success message
+        $message = 'Order status updated successfully';
 
-    // Show the form for editing the specified order.
-    public function edit($id)
-    {
-        $order = Order::findOrFail($id);
-        return view('admin.order.edit', compact('order'));
-    }
+        // Flash the success message to the session
+        session()->flash('success', $message);
 
-    // Update the specified order in the database.
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'product_name' => 'required|string|max:255',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
+        // Return the JSON response
+        return response()->json([
+            'status' => true,
+            'message' => $message
         ]);
-
-        $order = Order::findOrFail($id);
-        $order->customer_name = $request->get('customer_name');
-        $order->product_name = $request->get('product_name');
-        $order->quantity = $request->get('quantity');
-        $order->price = $request->get('price');
-
-        $order->save();
-
-        return redirect()->route('order.list')->with('success', 'Order updated successfully.');
     }
 
-    // Remove the specified order from the database.
-    public function destroy($id)
-    {
-        $order = Order::findOrFail($id);
-        $order->delete();
 
-        return redirect()->route('order.list')->with('success', 'Order deleted successfully.');
-    }
 }

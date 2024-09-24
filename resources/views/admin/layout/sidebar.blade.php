@@ -12,7 +12,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                     with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="dashboard.html" class="nav-link">
+                    <a href="{{ route("admin.dashboard") }}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
@@ -45,36 +45,36 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route ("shipping.create") }}" class="nav-link">
                         <!-- <i class="nav-icon fas fa-tag"></i> -->
                         <i class="fas fa-truck nav-icon"></i>
                         <p>Shipping</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('orders.create')}}" class="nav-link">
+                    <a href="{{route('orders.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-shopping-bag"></i>
                         <p>Orders</p>
                     </a>
                 </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a href="discount.html" class="nav-link">--}}
+{{--                        <i class="nav-icon  fa fa-percent" aria-hidden="true"></i>--}}
+{{--                        <p>Discount</p>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
                 <li class="nav-item">
-                    <a href="discount.html" class="nav-link">
-                        <i class="nav-icon  fa fa-percent" aria-hidden="true"></i>
-                        <p>Discount</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="users.html" class="nav-link">
+                    <a href="{{ route("users.index") }}" class="nav-link">
                         <i class="nav-icon  fas fa-users"></i>
                         <p>Users</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('page.create')}}}" class="nav-link">
-                        <i class="nav-icon  far fa-file-alt"></i>
-                        <p>Pages</p>
-                    </a>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a href="{{route('page.create')}}}" class="nav-link">--}}
+{{--                        <i class="nav-icon  far fa-file-alt"></i>--}}
+{{--                        <p>Pages</p>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

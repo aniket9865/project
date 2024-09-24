@@ -103,23 +103,30 @@
                 <div class="row pb-3">
                     @if(getCategories()->isNotEmpty())
                         @foreach(getCategories() as $category)
+
                             <div class="col-lg-3">
+                                <a href="{{ route('front.shop', $category->slug) }}">
                                 <div class="cat-card">
                                     <div class="left">
-                                        @if($category->image != "")
-                                            <img src="{{asset('uploads/temp/'.$category->image)}}" alt="" class="img-fluid">
-                                        @else
-                                            <img class="img-fluid" src="{{asset('admin/img/default-150x150.png')}}">
-                                        @endif
+
+                                            @if($category->image != "")
+                                                <img src="{{ asset('uploads/temp/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid">
+                                            @else
+                                                <img src="{{ asset('admin/img/default-150x150.png') }}" alt="Default Image" class="img-fluid">
+                                            @endif
+
                                     </div>
                                     <div class="right">
                                         <div class="cat-data">
-                                            <h2>{{$category->name}}</h2>
+                                            <h2>{{ $category->name }}</h2>
                                             {{-- <p>100 Products</p> --}}
                                         </div>
                                     </div>
                                 </div>
+                                </a>
                             </div>
+
+
                         @endforeach
                     @endif
             </div>
@@ -138,6 +145,7 @@
                                 <div class="card product-card">
                                     <div class="product-image position-relative">
 
+
                                             <a href="{{route("front.product", $product->slug)}}" class="product-img">
                                                 @if($product->image != "")
                                                 <img class="card-img-top" src="{{asset('uploads/temp/'.$product->image)}}" alt="{{ $product->title }}">
@@ -146,13 +154,36 @@
                                                 @endif
                                             </a>
 
-                                        <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                        <!-- Wishlist Link -->
+                                        <a href="javascript:void(0);" onclick="addToWishList({{ $product->id }})" class="wishlist">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+
+
+{{--                                        <div class="product-action">--}}
+{{--                                            <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">--}}
+{{--                                                <i class="fa fa-shopping-cart"></i> Add To Cart--}}
+{{--                                            </a>--}}
+{{--                                        </div>--}}
 
                                         <div class="product-action">
-                                            <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
+                                            @if(trim(strtolower($product->track_qty)) == 'yes')
+                                                @if ($product->qty > 0)
+                                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }});">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+                                                @else
+                                                    <a class="btn btn-dark" href="javascript:void(0);">
+                                                        Out Of Stock
+                                                    </a>
+                                                @endif
+                                            @else
+                                                <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }});">
+                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                </a>
+                                            @endif
                                         </div>
+
                                     </div>
                                     <div class="card-body text-center mt-3">
                                         <a class="h6 link" href="product.php">{{ $product->title }}</a>
@@ -188,13 +219,34 @@
                                             @endif
                                         </a>
 
-                                        <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                        <!-- Wishlist Link -->
+                                        <a href="javascript:void(0);" onclick="addToWishList({{ $product->id }})" class="wishlist">
+                                            <i class="far fa-heart"></i>
+                                        </a>
 
+{{--                                        <div class="product-action">--}}
+{{--                                            <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">--}}
+{{--                                                <i class="fa fa-shopping-cart"></i> Add To Cart--}}
+{{--                                            </a>--}}
+{{--                                        </div>--}}
                                         <div class="product-action">
-                                            <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
+                                            @if(trim(strtolower($product->track_qty)) == 'yes')
+                                                @if ($product->qty > 0)
+                                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }});">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+                                                @else
+                                                    <a class="btn btn-dark" href="javascript:void(0);">
+                                                        Out Of Stock
+                                                    </a>
+                                                @endif
+                                            @else
+                                                <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }});">
+                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                </a>
+                                            @endif
                                         </div>
+
                                     </div>
                                     <div class="card-body text-center mt-3">
                                         <a class="h6 link" href="product.php">{{ $product->title }}</a>

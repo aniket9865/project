@@ -1,6 +1,6 @@
 @extends('front.layout.app')
 @section('content')
-    <main>
+
         <section class="section-5 pt-3 pb-3 mb-3 bg-white">
             <div class="container">
                 <div class="light-font">
@@ -34,11 +34,14 @@
                                         <tr data-rowid="{{ $item->rowId }}">
                                             <td>
                                                 <div class="d-flex align-items-center justify-content-center">
-                                                    @if(!empty($item->options->image))
-                                                        <img class="card-img-top" src="{{ asset('uploads/temp/' . $item->options->image) }}" alt="{{ $item->name }}" width="100" height="100">
+
+                                                    @if($item->options->image)
+                                                        <img class="card-img-top" width="100" height="100" src="{{ asset('uploads/temp/' . $item->options->image) }}">
                                                     @else
-                                                        <img class="card-img-top" src="{{ asset('admin/img/default-150x150.png') }}" width="100" height="100">
+                                                        <img class="card-img-top" src="{{ asset('admin/img/default-150x150.png') }}" width="100" height="100"width="50" >
                                                     @endif
+
+
                                                     <h2>{{ $item->name }}</h2>
                                                 </div>
                                             </td>
@@ -89,17 +92,17 @@
                                     <div>Subtotal</div>
                                     <div>${{ Cart::subtotal() }}</div>
                                  </div>
-                                <div class="d-flex justify-content-between pb-2">
-                                    <div>Shipping</div>
-                                    <div>0</div>
-                                </div>
+{{--                                <div class="d-flex justify-content-between pb-2">--}}
+{{--                                    <div>Shipping</div>--}}
+{{--                                    <div>0</div>--}}
+{{--                                </div>--}}
                                 <div class="d-flex justify-content-between summery-end">
                                     <div>Total</div>
                                     <div>${{ Cart::subtotal() }}</div>
                                 </div>
                             </div>
-                            <div class="pt-5">
-                                <a href="{{route('account.login')}}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                            <div class="pt-2">
+                                <a href="{{route('front.checkout')}}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                             </div>
 {{--                        <div class="input-group apply-coupan mt-4">--}}
 {{--                            <input type="text" placeholder="Coupon Code" class="form-control">--}}
@@ -109,7 +112,7 @@
                 </div>
             </div>
         </section>
-    </main>
+
 @endsection
 @section('customjs')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

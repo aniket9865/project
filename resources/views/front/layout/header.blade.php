@@ -53,17 +53,19 @@
                     <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">SHOP</span>
                 </a>
             </div>
+
+            <!-- Add this snippet where you want the search form to appear -->
             <div class="col-lg-6 col-6 text-left d-flex justify-content-end align-items-center">
-                <a href="{{ url('account') }}" class="nav-link text-dark">My Account</a>
-                <form action="{{ url('search') }}" method="GET">
-                    <div class="input-group">
-                        <input type="text" name="query" placeholder="Search For Products" class="form-control" aria-label="Search for Products">
-                        <span class="input-group-text">
-                            <i class="fa fa-search"></i>
-                        </span>
-                    </div>
-                </form>
+                <a href="{{ route('front.account') }}" class="nav-link text-dark">My Account</a>
+                <div class="d-flex align-items-center mb-4" style="margin-top: 18px;">
+                    <form class="d-flex w-100" method="GET" action="{{ route('front.shop') }}">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search products" aria-label="Search" value="{{ request('search') }}">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                    </form>
+                </div>
+
             </div>
+
         </div>
     </div>
 </div>
@@ -89,7 +91,7 @@
                                 @if($category->sub_category->isNotEmpty())
                                     <ul class="dropdown-menu dropdown-menu-dark">
                                         @foreach($category->sub_category as $subCategory)
-                                            <li><a class="dropdown-item nav-link" href="#">{{$subCategory->name}}</a></li>
+                                            <li><a class="dropdown-item nav-link" href="{{route('front.shop',[$category->slug,$subCategory->slug,])}}">{{$subCategory->name}}</a></li>
                                         @endforeach
                                     </ul>
                                 @endif

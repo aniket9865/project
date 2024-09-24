@@ -85,11 +85,29 @@
 
                             <h2 class="price ">{{$product->price}}</h2>
 
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis officiis dolor aut nihil iste porro ullam repellendus inventore voluptatem nam veritatis exercitationem doloribus voluptates dolorem nobis voluptatum qui, minus facere.</p>
+                            <p>{{$product->description}}</p>
 {{--                            <a href="javascript:void(0);" onclick="addToCard{{ $product->id }}" class="btn btn-dark"><i class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a>--}}
-                            <a href="javascript:void(0);" onclick="addToCart({{ $product->id }})" class="btn btn-dark">
-                                <i class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART
-                            </a>
+{{--                            <a href="javascript:void(0);" onclick="addToCart({{ $product->id }})" class="btn btn-dark">--}}
+{{--                                <i class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART--}}
+{{--                            </a>--}}
+{{--                            <div class="product-action">--}}
+                                @if(trim(strtolower($product->track_qty)) == 'yes')
+                                    @if ($product->qty > 0)
+                                        <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})" data-product-id="{{ $product->id }}">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+                                    @else
+                                        <a class="btn btn-dark" href="javascript:void(0);">
+                                            Out Of Stock
+                                        </a>
+                                    @endif
+                                @else
+                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})" data-product-id="{{ $product->id }}">
+                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </a>
+                                @endif
+{{--                            </div>--}}
+
                         </div>
                     </div>
 
@@ -230,6 +248,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
     </main>
 @endsection

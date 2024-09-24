@@ -8,8 +8,31 @@ use App\Http\Controllers\admin\CategoryController;
 Route::get('/',[\App\Http\Controllers\FrontController::class,'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[\App\Http\Controllers\ShopController::class,'index'])->name('front.shop');
 Route::get('/product/{productSlug?}',[\App\Http\Controllers\ShopController::class,'product'])->name('front.product');
-//Route::get('/cart',[\App\Http\Controllers\CartController::class,'cart'])->name('front.cart');
-//Route::post('/add=to-cart',[\App\Http\Controllers\CartController::class,'addToCart'])->name('front.addToCart');
+
+
+//Route::get('/shop/{slug}', [\App\Http\Controllers\FrontController::class, 'showProduct'])->name('shop.single');
+
+
+//    ->middleware('auth'); // Ensure only authenticated users can access this route
+
+//use App\Http\Controllers\FrontController;
+//
+//// Route for displaying the user's wishlist
+//Route::get('/wishlist', [FrontController::class, 'wishlist'])
+//    ->name('wishlist.index')
+//    ->middleware('auth'); // Ensure only authenticated users can access this route
+//
+//// Route for adding a product to the wishlist
+//Route::post('/add-to-wishlist/{id}', [FrontController::class, 'addToWishlist'])
+//    ->name('wishlist.add')
+//    ->middleware('auth'); // Ensure only authenticated users can access this route
+//
+//// Route for removing a product from the wishlist
+//Route::post('/remove-from-wishlist', [FrontController::class, 'removeProductFromWishList'])
+//    ->name('wishlist.remove')
+//    ->middleware('auth'); // Ensure only authenticated users can access this route
+
+
 
 use App\Http\Controllers\CartController;
 
@@ -25,10 +48,6 @@ Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.u
 // Route to remove a product from the cart
 Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
-use App\Http\Controllers\CheckoutController;
-
-// Route for checkout page
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 // Routes for user account
 Route::prefix('account')->group(function () {
@@ -43,8 +62,25 @@ Route::prefix('account')->group(function () {
     // Authenticated routes
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('account.logout');
-        Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('account.dashboard');
 
+        Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('front.checkout');
+        Route::post('/process-Checkout', [\App\Http\Controllers\CartController::class, 'processCheckout'])->name('front.processCheckout');
+       Route::get('/thanks/{id}', [\App\Http\Controllers\CartController::class, 'thankyou'])->name('front.thankyou');
+
+
+        Route::get('/account', [\App\Http\Controllers\LoginController::class, 'account'])->name('front.account');
+        Route::get('/order', [\App\Http\Controllers\LoginController::class, 'orders'])->name('front.order');
+        Route::get('/order-detail/{orderId}', [\App\Http\Controllers\LoginController::class, 'orderDetail'])->name('account.orderDetail');
+
+        Route::post('/add-to-wishlist/{id}', [\App\Http\Controllers\FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
+
+        // Route for displaying the user's wishlist
+        Route::get('/wishlist', [\App\Http\Controllers\FrontController::class, 'wishlist'])
+            ->name('wishlist.index');
+
+        // Route for removing a product from the wishlist
+        Route::post('/remove-from-wishlist', [\App\Http\Controllers\FrontController::class, 'removeProductFromWishList'])
+            ->name('wishlist.remove');
     });
 });
 
@@ -108,17 +144,15 @@ Route::prefix('admin')->group(function () {
         Route::delete('product-image', [\App\Http\Controllers\admin\ProductImageController::class, 'delete'])->name('product-images.delete');
 
 
-// Subcategory AJAX Route
-        Route::get('subcategories/get', [Su::class, 'getSubcategories'])->name('subcategories.get');
+//        // Subcategory AJAX Route
+//        Route::get('subcategories/get', [Su::class, 'getSubcategories'])->name('subcategories.get');
 
 
         // Orders Route
         Route::get('/orders', [\App\Http\Controllers\admin\OrderController::class, 'index'])->name('orders.index');
-        Route::get('/orders/create', [\App\Http\Controllers\admin\OrderController::class, 'create'])->name('orders.create');
-        Route::post('/orders', [\App\Http\Controllers\admin\OrderController::class, 'store'])->name('orders.store');
-        Route::get('/orders/{order}/edit', [\App\Http\Controllers\admin\OrderController::class, 'edit'])->name('orders.edit');
-        Route::put('/orders/{order}', [\App\Http\Controllers\admin\OrderController::class, 'update'])->name('orders.update');
-        Route::delete('/orders/{order}', [\App\Http\Controllers\admin\OrderController::class, 'destroy'])->name('orders.destroy');
+        Route::get('/orders/{id}', [\App\Http\Controllers\admin\OrderController::class, 'detail'])->name('orders.detail');
+        Route::post('/orders/change-status/{id}', [\App\Http\Controllers\admin\OrderController::class, 'changeOrderStatus'])->name('orders.changeOrderStatus');
+
 
         // Pages Route
         Route::get('/pages', [\App\Http\Controllers\admin\PageController::class, 'index'])->name('page.index');
@@ -127,6 +161,23 @@ Route::prefix('admin')->group(function () {
         Route::get('/pages/{page}/edit', [\App\Http\Controllers\admin\PageController::class, 'edit'])->name('page.edit');
         Route::put('/pages/{page}', [\App\Http\Controllers\admin\PageController::class, 'update'])->name('page.update');
         Route::delete('/pages/{page}', [\App\Http\Controllers\admin\PageController::class, 'destroy'])->name('page.destroy');
+
+        //Route User
+        Route::get('/users', [\App\Http\Controllers\admin\UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [\App\Http\Controllers\admin\UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [\App\Http\Controllers\admin\UserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}/edit', [\App\Http\Controllers\admin\UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [\App\Http\Controllers\admin\UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}', [\App\Http\Controllers\admin\UserController::class, 'destroy'])->name('users.destroy');
+
+
+        // Shipping Routes
+        Route::get('/shipping', [\App\Http\Controllers\admin\ShippingController::class, 'index'])->name('shipping.index');
+        Route::get('/shipping/create', [\App\Http\Controllers\admin\ShippingController::class, 'create'])->name('shipping.create');
+        Route::post('/shipping', [\App\Http\Controllers\admin\ShippingController::class, 'store'])->name('shipping.store');
+        Route::get('/shipping/{id}/edit', [\App\Http\Controllers\admin\ShippingController::class, 'edit'])->name('shipping.edit');
+        Route::put('/shipping/{id}', [\App\Http\Controllers\admin\ShippingController::class, 'update'])->name('shipping.update');
+        Route::delete('/shipping/{id}', [\App\Http\Controllers\admin\ShippingController::class, 'destroy'])->name('shipping.destroy');
 
     });
 });
