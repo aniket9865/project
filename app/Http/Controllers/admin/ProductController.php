@@ -387,7 +387,9 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:products,slug',
+            'short_description' => 'nullable|string',
             'description' => 'nullable|string',
+            'shipping_returns' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'compare_price' => 'nullable|numeric|min:0',
             'sku' => 'nullable|string|max:255|unique:products,sku',
@@ -450,7 +452,9 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:products,slug,' . $product->id,
+            'short_description' => 'nullable|string',
             'description' => 'nullable|string',
+            'related_products' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'compare_price' => 'nullable|numeric|min:0',
             'sku' => 'nullable|string|max:255|unique:products,sku,' . $product->id,

@@ -44,8 +44,17 @@
                                 </div>
                                 <!-- Description -->
                                 <div class="mb-3">
+                                    <label for="short_description">Short Description</label>
+                                    <textarea name="short_description" id="short_description" cols="30" rows="10" class="summernote" placeholder="">{{ old('short_description', $product->short_description) }}</textarea>
+                                </div>
+                                <div class="mb-3">
                                     <label for="description">Description</label>
                                     <textarea name="description" id="description" cols="30" rows="10" class="summernote" placeholder="Description">{{ old('description', $product->description) }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description">Shipping and Return</label>
+                                    <textarea name="shipping_returns" id="shipping_returns" cols="30" rows="10" class="summernote" placeholder="">{{ old('shipping_returns', $product->shipping_returns) }}</textarea>
                                 </div>
                             </div>
                         </div>

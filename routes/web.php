@@ -9,7 +9,9 @@ Route::get('/',[\App\Http\Controllers\FrontController::class,'index'])->name('fr
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[\App\Http\Controllers\ShopController::class,'index'])->name('front.shop');
 Route::get('/product/{productSlug?}',[\App\Http\Controllers\ShopController::class,'product'])->name('front.product');
 
-
+Route::get('about-us',[\App\Http\Controllers\FooterController::class,'about'])->name('front.about');
+Route::get('/contact', [\App\Http\Controllers\FooterController::class, 'showContactForm'])->name('contact.show');
+Route::post('/contact', [\App\Http\Controllers\FooterController::class, 'submitContactForm'])->name('contact.submit');
 //Route::get('/shop/{slug}', [\App\Http\Controllers\FrontController::class, 'showProduct'])->name('shop.single');
 
 

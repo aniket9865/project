@@ -126,20 +126,32 @@ class ShopController extends Controller
 
 
     public function product($slug)
+//    {
+//        $product = Product::where('slug', $slug)->with('image')->first();
+//
+//        //dd($product); // Check the structure of $product
+//
+//        if ($product === null) {
+//            abort(404);
+//        }
+//
+//        $data['product'] = $product;
+//
+//        return view('front.product', $data);
+//    }
+
     {
+        // Fetch the product using the slug
         $product = Product::where('slug', $slug)->with('image')->first();
 
-        //dd($product); // Check the structure of $product
+        // Fetch related products or whatever logic you use to get products
+        $products = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(4) // Limit number of related products
+            ->get();
 
-        if ($product === null) {
-            abort(404);
-        }
-
-        $data['product'] = $product;
-
-        return view('front.product', $data);
+        // Return the view with both the product and the related products
+        return view('front.product', compact('product', 'products'));
     }
-
-
 
 }

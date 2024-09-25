@@ -76,10 +76,12 @@ class OrderController extends Controller
         session()->flash('success', $message);
 
         // Return the JSON response
-        return response()->json([
-            'status' => true,
-            'message' => $message
-        ]);
+//        return response()->json([
+//            'status' => true,
+//            'message' => $message
+//        ]);
+        return redirect()->route('orders.index')->with('message', $message);
+
     }
 
 

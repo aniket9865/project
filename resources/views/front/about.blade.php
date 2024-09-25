@@ -25,7 +25,7 @@
 
             <p>Thank you for choosing Online-Shop. We look forward to serving you and being part of your shopping journey. Stay tuned for exciting new arrivals, exclusive deals, and much more!</p>
 
-            <p>If you have any questions or feedback, don't hesitate to <a href="{{ route('front.contact') }}">contact us</a>.</p>
+            <p>If you have any questions or feedback, don't hesitate to <a href="#">contact us</a>.</p>
         </div>
     </section>
 
